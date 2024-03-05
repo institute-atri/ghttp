@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -14,12 +15,18 @@ type EntityHttpRequest struct {
 	Method              string
 	UserAgent           string
 	ContentType         string
-	Cookies             []http.Cookie
 	Data                io.Reader
 	Sleep               time.Duration
+	Cookies             []http.Cookie
+	Proxy               func(*http.Request) (*url.URL, error)
 	TlsCertificateCheck bool
 
 	TimeIn time.Time
+
+	EntityFeatures struct {
+		OnRandomUserAgent bool
+		OnTor             bool
+	}
 }
 
 type HttpResponse struct {
@@ -36,6 +43,10 @@ func NewHttp() *EntityHttpRequest {
 		UserAgent:   "GNET - Advanced Technology Research Institute",
 		Data:        nil,
 		ContentType: "text/html; charset=UTF-8",
+		EntityFeatures: struct {
+			OnRandomUserAgent bool
+			OnTor             bool
+		}{false, false},
 	}
 
 	return entity
@@ -90,13 +101,31 @@ func (e *EntityHttpRequest) SetCookies(cookies []http.Cookie) {
 	}
 }
 
+func (e *EntityHttpRequest) SetProxy(proxy string) error {
+	var proxyURL, err = url.Parse(proxy)
+
+	e.Proxy = http.ProxyURL(proxyURL)
+
+	return err
+}
+
+func (e *EntityHttpRequest) OnRandomUserAgent() {
+	e.EntityFeatures.OnRandomUserAgent = true
+}
+
+func (e *EntityHttpRequest) OnTor() {
+	e.EntityFeatures.OnTor = true
+
+	e.SetProxy(TORURI)
+}
+
 func (e *EntityHttpRequest) OnFirewallDetect() {}
 
 func (e *EntityHttpRequest) Do() (*HttpResponse, error) {
 	var client = &http.Client{
 		CheckRedirect: nil,
 		Transport: &http.Transport{
-			Proxy: nil,
+			Proxy: e.Proxy,
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: e.TlsCertificateCheck,
 			},
