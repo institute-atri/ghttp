@@ -17,7 +17,7 @@ func ThisIsURL(URL string) error {
 	case "http":
 	case "https":
 	default:
-		return fmt.Errorf("Invalid scheme")
+		return fmt.Errorf("invalid scheme")
 	}
 
 	return nil
