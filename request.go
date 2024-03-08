@@ -54,7 +54,7 @@ func NewHttp() *EntityHttpRequest {
 
 func (e *EntityHttpRequest) SetURL(URL string) error {
 	if ThisIsURL(URL) != nil {
-		return fmt.Errorf("This URL is invalid for use.")
+		return fmt.Errorf("this url is invalid for use")
 	}
 
 	e.URL = URL
@@ -73,7 +73,7 @@ func (e *EntityHttpRequest) SetMethod(method string) error {
 	case "PUT":
 		e.Method = "PUT"
 	default:
-		return fmt.Errorf("Non-existent or unacceptable method.")
+		return fmt.Errorf("non-existent or unacceptable method")
 	}
 
 	return nil
