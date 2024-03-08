@@ -1,4 +1,4 @@
-package main
+package gnet
 
 import (
 	"encoding/json"
