@@ -96,9 +96,7 @@ func (e *EntityHttpRequest) SetSleep(time time.Duration) {
 }
 
 func (e *EntityHttpRequest) SetCookies(cookies []http.Cookie) {
-	for _, c := range cookies {
-		e.Cookies = append(e.Cookies, c)
-	}
+	e.Cookies = append(e.Cookies, cookies...)
 }
 
 func (e *EntityHttpRequest) SetProxy(proxy string) error {
