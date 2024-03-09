@@ -63,20 +63,18 @@ func (e *EntityHttpRequest) SetURL(URL string) error {
 }
 
 func (e *EntityHttpRequest) SetMethod(method string) error {
-	switch method {
-	case "GET":
-		e.Method = "GET"
-	case "POST":
-		e.Method = "POST"
-	case "DELETE":
-		e.Method = "DELETE"
-	case "PUT":
-		e.Method = "PUT"
-	default:
-		return fmt.Errorf("non-existent or unacceptable method")
+	httpRequests := map[string]bool{
+		"GET":    true,
+		"POST":   true,
+		"PUT":    true,
+		"DELETE": true,
 	}
 
-	return nil
+	if request := httpRequests[method]; request {
+		e.Method = method
+		return nil
+	}
+	return fmt.Errorf("non-existent or unacceptable method")
 }
 
 func (e *EntityHttpRequest) SetUserAgent(agent string) {
