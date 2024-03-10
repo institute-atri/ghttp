@@ -6,6 +6,33 @@ import (
 	"testing"
 )
 
+func TestSetMethod(t *testing.T) {
+	cases := []struct {
+		method string
+		valid  bool
+	}{
+		{"GET", true},
+		{"POST", true},
+		{"PUT", true},
+		{"DELETE", true},
+		{"INVALID_METHOD", false},
+	}
+
+	for _, c := range cases {
+		t.Run(c.method, func(t *testing.T) {
+			e := &EntityHttpRequest{}
+			err := e.SetMethod(c.method)
+
+			switch {
+			case c.valid && err != nil:
+				t.Errorf("Unexpected error for %s method: %v", c.method, err)
+			case !c.valid && err == nil:
+				t.Errorf("Expected error for %s method, but got none", c.method)
+			}
+		})
+	}
+}
+
 func TestPost(t *testing.T) {
 	var response = POST("http://httpbin.org/post", "user=admin&pass=123")
 
