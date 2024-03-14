@@ -69,7 +69,7 @@ func (e *EntityHttpRequest) SetMethod(method string) error {
 		"PUT":    true,
 		"DELETE": true,
 	}
-	
+
 	if request := httpRequests[method]; request {
 		e.Method = method
 		return nil
