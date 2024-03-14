@@ -50,12 +50,12 @@ func TestSetMethod(t *testing.T) {
 		{"DELETE", true},
 		{"INVALID_METHOD", false},
 	}
-	
+
 	for _, c := range cases {
 		t.Run(c.method, func(t *testing.T) {
 			e := &EntityHttpRequest{}
 			err := e.SetMethod(c.method)
-			
+
 			switch {
 			case c.valid && err != nil:
 				t.Errorf("Unexpected error for %s method: %v", c.method, err)
