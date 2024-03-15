@@ -19,6 +19,7 @@ type HttpRequest struct {
 	Sleep               time.Duration
 	Cookies             []http.Cookie
 	Proxy               func(*http.Request) (*url.URL, error)
+	Redirect            func(*http.Request, []*http.Request) error
 	TlsCertificateCheck bool
 
 	TimeIn time.Time
@@ -110,6 +111,10 @@ func (e *HttpRequest) SetProxy(proxy string) error {
 	return err
 }
 
+func (e *HttpRequest) SetRedirectFunc(redirect func(*http.Request, []*http.Request) error) {
+	e.Redirect = redirect
+}
+
 func (e *HttpRequest) OnRandomUserAgent() {
 	e.EntityFeatures.OnRandomUserAgent = true
 }
@@ -120,11 +125,9 @@ func (e *HttpRequest) OnTor() {
 	e.SetProxy(TORURI)
 }
 
-func (e *HttpRequest) OnFirewallDetect() {}
-
 func (e *HttpRequest) Do() (*HttpResponse, error) {
 	var client = &http.Client{
-		CheckRedirect: nil,
+		CheckRedirect: e.Redirect,
 		Transport: &http.Transport{
 			Proxy: e.Proxy,
 			TLSClientConfig: &tls.Config{
