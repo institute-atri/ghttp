@@ -65,7 +65,7 @@ func (e *HttpRequest) SetURL(URL string) error {
 	return nil
 }
 
-func (e *EntityHttpRequest) SetMethod(method string) error {
+func (e *HttpRequest) SetMethod(method string) error {
 	switch method {
 	case "GET", "POST", "DELETE", "PUT":
 		e.Method = method
