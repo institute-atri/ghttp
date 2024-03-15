@@ -67,18 +67,11 @@ func (e *HttpRequest) SetURL(URL string) error {
 
 func (e *HttpRequest) SetMethod(method string) error {
 	switch method {
-	case "GET":
-		e.Method = "GET"
-	case "POST":
-		e.Method = "POST"
-	case "DELETE":
-		e.Method = "DELETE"
-	case "PUT":
-		e.Method = "PUT"
+	case "GET", "POST", "DELETE", "PUT":
+		e.Method = method
 	default:
 		return fmt.Errorf("non-existent or unacceptable method")
 	}
-
 	return nil
 }
 
