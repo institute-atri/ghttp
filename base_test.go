@@ -53,14 +53,21 @@ func TestSetMethod(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.method, func(t *testing.T) {
-			e := &EntityHttpRequest{}
+			e := &HttpRequest{}
 			err := e.SetMethod(c.method)
 
-			switch {
-			case c.valid && err != nil:
-				t.Errorf("Unexpected error for %s method: %v", c.method, err)
-			case !c.valid && err == nil:
-				t.Errorf("Expected error for %s method, but got none", c.method)
+			switch c.valid {
+			case true:
+				if err != nil {
+					t.Errorf("Unexpected error for %s method: %v", c.method, err)
+				}
+				if e.Method != c.method {
+					t.Errorf("SetMethod() didn't set the method correctly. Expected: %s, Got: %s", c.method, e.Method)
+				}
+			case false:
+				if err == nil {
+					t.Errorf("Expected error for %s method, but got none", c.method)
+				}
 			}
 		})
 	}

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type EntityHttpRequest struct {
+type HttpRequest struct {
 	URL                 string
 	Method              string
 	UserAgent           string
@@ -30,16 +30,19 @@ type EntityHttpRequest struct {
 }
 
 type HttpResponse struct {
-	URL       string
-	Method    string
-	UserAgent string
-	BRaw      string
+	URL           string
+	Method        string
+	UserAgent     string
+	BRaw          string
+	StatusCode    int
+	ContentLength int64
 
 	Duration time.Duration
+	Request  HttpRequest
 }
 
-func NewHttp() *EntityHttpRequest {
-	var entity = &EntityHttpRequest{
+func NewHttp() *HttpRequest {
+	var entity = &HttpRequest{
 		UserAgent:   "GNET - Advanced Technology Research Institute",
 		Data:        nil,
 		ContentType: "text/html; charset=UTF-8",
@@ -52,7 +55,7 @@ func NewHttp() *EntityHttpRequest {
 	return entity
 }
 
-func (e *EntityHttpRequest) SetURL(URL string) error {
+func (e *HttpRequest) SetURL(URL string) error {
 	if ThisIsURL(URL) != nil {
 		return fmt.Errorf("this url is invalid for use")
 	}
@@ -63,41 +66,36 @@ func (e *EntityHttpRequest) SetURL(URL string) error {
 }
 
 func (e *EntityHttpRequest) SetMethod(method string) error {
-	httpRequests := map[string]bool{
-		"GET":    true,
-		"POST":   true,
-		"PUT":    true,
-		"DELETE": true,
-	}
-
-	if request := httpRequests[method]; request {
+	switch method {
+	case "GET", "POST", "DELETE", "PUT":
 		e.Method = method
-		return nil
+	default:
+		return fmt.Errorf("non-existent or unacceptable method")
 	}
-	return fmt.Errorf("non-existent or unacceptable method")
+	return nil
 }
 
-func (e *EntityHttpRequest) SetUserAgent(agent string) {
+func (e *HttpRequest) SetUserAgent(agent string) {
 	e.UserAgent = agent
 }
 
-func (e *EntityHttpRequest) SetData(data string) {
+func (e *HttpRequest) SetData(data string) {
 	e.Data = strings.NewReader(data)
 }
 
-func (e *EntityHttpRequest) SetContentType(content string) {
+func (e *HttpRequest) SetContentType(content string) {
 	e.ContentType = content
 }
 
-func (e *EntityHttpRequest) SetSleep(time time.Duration) {
+func (e *HttpRequest) SetSleep(time time.Duration) {
 	e.Sleep = time
 }
 
-func (e *EntityHttpRequest) SetCookies(cookies []http.Cookie) {
+func (e *HttpRequest) SetCookies(cookies []http.Cookie) {
 	e.Cookies = append(e.Cookies, cookies...)
 }
 
-func (e *EntityHttpRequest) SetProxy(proxy string) error {
+func (e *HttpRequest) SetProxy(proxy string) error {
 	var proxyURL, err = url.Parse(proxy)
 
 	e.Proxy = http.ProxyURL(proxyURL)
@@ -105,19 +103,19 @@ func (e *EntityHttpRequest) SetProxy(proxy string) error {
 	return err
 }
 
-func (e *EntityHttpRequest) OnRandomUserAgent() {
+func (e *HttpRequest) OnRandomUserAgent() {
 	e.EntityFeatures.OnRandomUserAgent = true
 }
 
-func (e *EntityHttpRequest) OnTor() {
+func (e *HttpRequest) OnTor() {
 	e.EntityFeatures.OnTor = true
 
 	e.SetProxy(TORURI)
 }
 
-func (e *EntityHttpRequest) OnFirewallDetect() {}
+func (e *HttpRequest) OnFirewallDetect() {}
 
-func (e *EntityHttpRequest) Do() (*HttpResponse, error) {
+func (e *HttpRequest) Do() (*HttpResponse, error) {
 	var client = &http.Client{
 		CheckRedirect: nil,
 		Transport: &http.Transport{
@@ -154,5 +152,14 @@ func (e *EntityHttpRequest) Do() (*HttpResponse, error) {
 	defer response.Body.Close()
 	defer time.Sleep(time.Duration(e.Sleep) * time.Second)
 
-	return &HttpResponse{URL: e.URL, Method: e.Method, UserAgent: response.Request.UserAgent(), Duration: time.Since(e.TimeIn), BRaw: string(braw)}, nil
+	return &HttpResponse{
+		URL:           e.URL,
+		Method:        e.Method,
+		StatusCode:    response.StatusCode,
+		ContentLength: response.ContentLength,
+		UserAgent:     response.Request.UserAgent(),
+		Duration:      time.Since(e.TimeIn),
+		BRaw:          string(braw),
+		Request:       *e,
+	}, nil
 }
