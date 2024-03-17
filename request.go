@@ -1,4 +1,4 @@
-package gnet
+package ghttp
 
 import (
 	"crypto/tls"
@@ -44,7 +44,7 @@ type HttpResponse struct {
 
 func NewHttp() *HttpRequest {
 	var entity = &HttpRequest{
-		UserAgent:   "GNET - Advanced Technology Research Institute",
+		UserAgent:   "GHTTP",
 		Data:        nil,
 		ContentType: "text/html; charset=UTF-8",
 		EntityFeatures: struct {
