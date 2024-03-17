@@ -1,4 +1,4 @@
-package gnet
+package ghttp
 
 import (
 	"fmt"
@@ -53,4 +53,3 @@ func TestSetMethod(t *testing.T) {
 		})
 	}
 }
-

@@ -1,7 +1,7 @@
-# 🛰️ GNET — HTTP Request Simplified 🛰️
+# 🛰️ GHTTP — HTTP Request Simplified 🛰️
 
-[![CI](https://github.com/institute-atri/gnet/actions/workflows/ci.yml/badge.svg)](https://github.com/institute-atri/gnet/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/institute-atri/gnet/graph/badge.svg?token=nR2sLEINBZ)](https://codecov.io/gh/institute-atri/gnet)
+[![CI](https://github.com/institute-atri/ghttp/actions/workflows/ci.yml/badge.svg)](https://github.com/institute-atri/ghttp/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/institute-atri/ghttp/graph/badge.svg?token=nR2sLEINBZ)](https://codecov.io/gh/institute-atri/ghttp)
 
 Making simplified web requests, meeting ATRI needs.
 
@@ -13,11 +13,11 @@ Example GET:
 package main
 
 import (
-	"github.com/institute-atri/gnet"
+	"github.com/institute-atri/ghttp"
 )
 
 func main() {
-	var response = gnet.GET("http://httpbin.org/get")
+	var response = ghttp.GET("http://httpbin.org/get")
 
 	// To obtain and print the entire Source Code of the site.
 	println(response.BRaw)
@@ -33,11 +33,11 @@ Example POST:
 package main
 
 import (
-	"github.com/institute-atri/gnet"
+	"github.com/institute-atri/ghttp"
 )
 
 func main() {
-	var response = gnet.POST("http://httpbin.org/get", "user=admin&password=123")
+	var response = ghttp.POST("http://httpbin.org/get", "user=admin&password=123")
 
 	// To obtain and print the entire Source Code of the site.
 	println(response.BRaw)
