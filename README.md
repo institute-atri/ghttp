@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	var response = ghttp.GET("http://httpbin.org/get")
+	response := ghttp.GET("http://httpbin.org/get")
 
 	// To obtain and print the entire Source Code of the site.
 	println(response.BRaw)
@@ -37,7 +37,7 @@ import (
 )
 
 func main() {
-	var response = ghttp.POST("http://httpbin.org/get", "user=admin&password=123")
+	response := ghttp.POST("http://httpbin.org/get", "user=admin&password=123")
 
 	// To obtain and print the entire Source Code of the site.
 	println(response.BRaw)

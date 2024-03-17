@@ -7,22 +7,32 @@ import (
 
 const TORURI = "socks5://127.0.0.1:9050"
 
+// CheckConnectionTor checks the connection status to the Tor network by making a request to the Tor Project API.
 func CheckConnectionTor() (string, error) {
 	var marshal map[string]interface{}
 
-	var request = NewHttp()
-	request.SetURL("https://check.torproject.org/api/ip")
-	request.SetMethod("GET")
-	request.OnTor()
+	request := NewHttp()
+	err := request.SetURL("https://check.torproject.org/api/ip")
+	if err != nil {
+		return "", err
+	}
 
-	var response, err = request.Do()
+	err = request.SetMethod("GET")
+	if err != nil {
+		return "", err
+	}
 
+	err = request.OnTor()
+	if err != nil {
+		return "", err
+	}
+
+	response, err := request.Do()
 	if err != nil {
 		return "", err
 	}
 
 	err = json.Unmarshal([]byte(response.BRaw), &marshal)
-
 	if err != nil {
 		return "", err
 	}
