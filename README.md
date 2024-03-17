@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/institute-atri/ghttp/actions/workflows/ci.yml/badge.svg)](https://github.com/institute-atri/ghttp/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/institute-atri/ghttp/graph/badge.svg?token=nR2sLEINBZ)](https://codecov.io/gh/institute-atri/ghttp)
+[![Go Report Card](https://goreportcard.com/badge/github.com/institute-atri/ghttp)](https://goreportcard.com/report/github.com/institute-atri/ghttp)
 
 Making simplified web requests, meeting ATRI needs.
 
